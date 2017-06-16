@@ -2,7 +2,6 @@ package main
 
 import (
 	"C"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -80,7 +79,7 @@ func FLBPluginFlush(data unsafe.Pointer, length C.int, tag *C.char) int {
 			_ = newTCPConnection()
 		}
 
-		_, err = fmt.Fprintf(c.conn, "%s\n", jsonPrettyPrint(enc_data))
+		_, err = fmt.Fprintf(c.conn, "%s\n", enc_data)
 		if err != nil {
 			fmt.Printf("Failed to send data: %v\n", err)
 			_ = c.conn.Close()
@@ -136,15 +135,16 @@ func encode_as_json(m interface{}) ([]byte, error) {
 
 	return json.Marshal(log)
 }
-func jsonPrettyPrint(in []byte) string {
-	var out bytes.Buffer
-	err := json.Indent(&out, in, "", "  ")
-	if err != nil {
-		return string(in)
-	}
-	return out.String()
-}
 
+// func jsonPrettyPrint(in []byte) string {
+// 	var out bytes.Buffer
+// 	err := json.Indent(&out, in, "", "  ")
+// 	if err != nil {
+// 		return string(in)
+// 	}
+// 	return out.String()
+// }
+//
 func FLBPluginExit() int {
 	if err := c.conn.Close(); err != nil {
 		fmt.Printf("Failed to close connection: %v", err)
