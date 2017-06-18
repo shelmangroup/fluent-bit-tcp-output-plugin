@@ -136,15 +136,6 @@ func encode_as_json(m interface{}) ([]byte, error) {
 	return json.Marshal(log)
 }
 
-// func jsonPrettyPrint(in []byte) string {
-// 	var out bytes.Buffer
-// 	err := json.Indent(&out, in, "", "  ")
-// 	if err != nil {
-// 		return string(in)
-// 	}
-// 	return out.String()
-// }
-//
 func FLBPluginExit() int {
 	if err := c.conn.Close(); err != nil {
 		fmt.Printf("Failed to close connection: %v", err)
