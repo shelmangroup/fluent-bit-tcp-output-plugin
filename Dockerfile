@@ -5,5 +5,6 @@ RUN make && mv out_tcp.so /
 
 FROM fluent/fluent-bit:0.12-dev
 COPY --from=builder /out_tcp.so /
+ADD fluent-bit.conf /fluent-bit/etc/fluent-bit.conf
 ENV TCP_OUTPUT_HOST localhost:5170
-CMD ["/fluent-bit/bin/fluent-bit", "-e", "/out_tcp.so", "-c", "/fluent-bit/etc/fluent-bit.conf", "-o", "out_tcp"]
+CMD ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf", "-e", "/out_tcp.so"]

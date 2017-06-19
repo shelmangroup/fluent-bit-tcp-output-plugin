@@ -18,12 +18,11 @@ type TCPConnection struct {
 	conn net.Conn
 }
 
-var TCP_OUTPUT_HOST string = os.Getenv("TCP_OUTPUT_HOST")
 var c TCPConnection
 
 //export FLBPluginRegister
 func FLBPluginRegister(ctx unsafe.Pointer) int {
-	return output.FLBPluginRegister(ctx, "out_tcp", "out_tcp GO!")
+	return output.FLBPluginRegister(ctx, "tcp", "TCP json output")
 }
 
 //export FLBPluginInit
@@ -35,7 +34,7 @@ func newTCPConnection() int {
 	var err error
 	c = TCPConnection{}
 
-	c.conn, err = net.Dial("tcp", TCP_OUTPUT_HOST)
+	c.conn, err = net.Dial("tcp", os.Getenv("TCP_OUTPUT_HOST"))
 	if err != nil {
 		fmt.Printf("Failed to start connection: %v\n", err)
 		return output.FLB_ERROR
