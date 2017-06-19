@@ -1,0 +1,39 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: fluent-bit-oklog
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: fluent-bit-oklog
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: fluent-bit-oklog
+          image: shelmangroup/fluent-bit-tcp:0.12-dev
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 0.15
+          env:
+            - name: TCP_OUTPUT_HOST
+              value: oklog.default:3001
+          ports:
+            - containerPort: 24224
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: fluent-bit-oklog
+  name: fluent-bit-oklog
+spec:
+  ports:
+  - name: forward
+    port: 24224
+    targetPort: 24224
+  selector:
+    app: fluent-bit-oklog
